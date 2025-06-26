@@ -316,8 +316,7 @@
           background-color: #ffffff10;
           backdrop-filter: blur(10px);
           border-radius: 15px;
-/*           padding: 40px 30px; */
-/*           max-width: 400px; */
+          padding-bottom: 10px;
           width: 100%;
           box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
@@ -329,7 +328,7 @@
     
         .card p {
           font-size: 1.1em;
-          margin-bottom: 30px;
+          margin-bottom: 15px;
         }
     
         .btn {
@@ -350,12 +349,63 @@
           color: #fff;
           box-shadow: 0 0 10px #fff;
         }
-    
-        .insta-icon {
-          margin-right: 8px;
-          vertical-align: middle;
-        }
 
+        :root {
+          --instagram-bg-start: #fdf497;
+          --instagram-bg-end: #285AEB;
+          --border-color: #fff;
+          --border-radius-large: 20px;
+          --border-radius-medium: 12px;
+          --border-radius-circle: 50%;
+          --box-shadow-color: rgba(0,0,0,.25);
+          --point-size: 20px;
+          --point-after-size: 8px;
+          --container-point-size: 50px;
+        }
+            
+        .instagram, .container-point {
+          display: flex;
+          align-items: center;
+        }
+            
+        .container-point, .point {
+          border: var(--border-color) 4px solid;
+        }
+        
+        .container-point, .point, .point:after {
+          border-radius: var(--border-radius-circle);
+        }
+        
+        .instagram {
+          background: var(--instagram-bg-start);
+          background: radial-gradient(circle at 30% 107%, var(--instagram-bg-start) 0%, var(--instagram-bg-start) 5%, 
+                                     #fd5949 45%, #d6249f 60%, var(--instagram-bg-end) 90%);
+          box-shadow: 0px 3px 10px var(--box-shadow-color);
+          border-radius: var(--border-radius-large);
+          height: 80px;
+          width: 85px;
+          .container-point {
+            border-radius: var(--border-radius-medium);
+            justify-content: center;
+            height: var(--container-point-size);
+            margin: 0 auto;
+            width: var(--container-point-size);
+            .point {
+              height: var(--point-size);
+              position: relative;
+              width: var(--point-size);
+              &:after {
+                background-color: var(--border-color);
+                content: "";
+                height: var(--point-after-size);
+                position: absolute;
+                right: -8px;
+                top: -9px;
+                width: var(--point-after-size);
+              }
+            }
+          }
+        }
         /* Estilos para impressão */
         @media print {
             body {
@@ -492,9 +542,15 @@
             <h1>📸 Me siga no Instagram!</h1>
             <p>Conteúdo diário sobre concursos, motivação e dicas práticas para sua aprovação.</p>
             <a class="btn" href="https://instagram.com/concursos_sem_misterios" target="_blank">
-              <i class="fa-brands fa-instagram"></i> @concursos_sem_misterios
+              @concursos_sem_misterios
             </a>
           </div>
+
+        <div class="instagram">
+          <div class="container-point">
+            <div class="point"></div>
+          </div>
+        </div>
 
         <section class="study-form">
             <h2>Registrar Novo Estudo</h2>
