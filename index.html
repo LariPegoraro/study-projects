@@ -308,6 +308,50 @@
             display: none;
         }
 
+        .card {
+          background-color: #ffffff10;
+          backdrop-filter: blur(10px);
+          border-radius: 15px;
+          padding: 40px 30px;
+          max-width: 400px;
+          width: 100%;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+    
+        .card h1 {
+          font-size: 2em;
+          margin-bottom: 10px;
+        }
+    
+        .card p {
+          font-size: 1.1em;
+          margin-bottom: 30px;
+        }
+    
+        .btn {
+          display: inline-block;
+          padding: 15px 25px;
+          background-color: #fff;
+          color: #e1306c;
+          border: none;
+          border-radius: 30px;
+          font-size: 1em;
+          font-weight: bold;
+          text-decoration: none;
+          transition: 0.3s;
+        }
+    
+        .btn:hover {
+          background-color: #e1306c;
+          color: #fff;
+          box-shadow: 0 0 10px #fff;
+        }
+    
+        .insta-icon {
+          margin-right: 8px;
+          vertical-align: middle;
+        }
+
         /* Estilos para impressão */
         @media print {
             body {
@@ -437,9 +481,17 @@
 </head>
 <body>
     <div class="container">
-        <h1>Organizador de Revisões Espaçadas</h1>
+        <h1>Organizador de Revisões</h1>
         <p class="subtitle">Este projeto foi idealizado e desenvolvido por: Larissa Pegoraro</p>
-        <a href="http://www.instagram.com/concursos_sem_misterios"> Me siga para mais informações</a>
+        
+        <div class="card">
+            <h1>📸 Me siga no Instagram!</h1>
+            <p>Conteúdo diário sobre concursos, motivação e dicas práticas para sua aprovação.</p>
+            <a class="btn" href="https://instagram.com/concursos_sem_misterios" target="_blank">
+              <span class="insta-icon">📷</span> @seuusuario
+            </a>
+          </div>
+
         <section class="study-form">
             <h2>Registrar Novo Estudo</h2>
             <div class="success-message" id="successMessage">
