@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizador de Revisões Espaçadas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1, h2 {
+            color: #0056b3;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-top: -15px;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+
+        .study-form, .revision-list {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .print-button {
+            background-color: #28a745;
+            width: auto;
+            margin-left: 10px;
+            display: inline-block;
+        }
+
+        .print-button:hover {
+            background-color: #218838;
+        }
+
+        .revision-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-container label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .filter-container select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            background-color: white;
+            cursor: pointer;
+            min-width: 180px;
+        }
+
+        .filter-container select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        .study-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: flex-end;
+        }
+
+        .edit-button, .delete-button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .edit-button {
+            background-color: #ffc107;
+            color: #212529;
+        }
+
+        .edit-button:hover {
+            background-color: #e0a800;
+        }
+
+        .delete-button {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+
+        .study-item {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .study-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .study-info {
+            flex: 1;
+        }
+
+        .study-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .study-details {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .edit-mode {
+            background-color: #fff3cd;
+            border-color: #ffc107;
+        }
+
+        .edit-form {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+
+        .edit-form .form-group {
+            margin-bottom: 10px;
+        }
+
+        .edit-form input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .edit-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .save-button, .cancel-button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .save-button {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .save-button:hover {
+            background-color: #218838;
+        }
+
+        .cancel-button {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .cancel-button:hover {
+            background-color: #5a6268;
+        }
+
+        .revision-item {
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .revision-item.completed {
+            background-color: #e6ffe6;
+            border-color: #aaffaa;
+        }
+
+        .revision-info {
+            flex-grow: 1;
+        }
+
+        .revision-info h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+
+        .revision-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .revision-actions input[type="checkbox"] {
+            transform: scale(1.5);
+            margin-left: 15px;
+            cursor: pointer;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        /* Estilos para impressão */
+        @media print {
+            body {
+                background-color: white;
+                padding: 0;
+                margin: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 20px;
+                max-width: none;
+                width: 100%;
+            }
+
+            .study-form {
+                display: none; /* Oculta o formulário na impressão */
+            }
+
+            .print-button {
+                display: none; /* Oculta o botão de impressão na impressão */
+            }
+
+            .revision-list {
+                border: none;
+                background-color: white;
+                padding: 0;
+            }
+
+            .revision-item {
+                border: 1px solid #333;
+                margin-bottom: 8px;
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            .revision-item.completed {
+                background-color: #f0f0f0;
+            }
+
+            .revision-actions input[type="checkbox"] {
+                transform: scale(1.2);
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 30px;
+                text-align: center;
+                color: #000;
+            }
+
+            h2 {
+                font-size: 20px;
+                margin-bottom: 20px;
+                color: #000;
+            }
+
+            h3 {
+                font-size: 16px;
+                margin-bottom: 15px;
+                color: #000;
+            }
+
+            .revision-info h3 {
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .revision-info p {
+                font-size: 12px;
+                color: #333;
+            }
+
+            /* Adiciona informações de impressão */
+            .print-info {
+                display: block;
+                text-align: center;
+                margin-bottom: 20px;
+                font-size: 12px;
+                color: #666;
+            }
+        }
+
+        .print-info {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            button {
+                padding: 12px;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="date"] {
+                width: 100%;
+            }
+
+            .revision-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+
+            .header-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .filter-container select {
+                min-width: auto;
+                width: 100%;
+            }
+
+            .print-button {
+                margin-left: 0;
+                margin-top: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Organizador de Revisões Espaçadas</h1>
+        <p class="subtitle">Este projeto foi idealizado e desenvolvido por: Larissa Pegoraro</p>
+
+        <section class="study-form">
+            <h2>Registrar Novo Estudo</h2>
+            <div class="success-message" id="successMessage">
+                Estudo adicionado com sucesso!
+            </div>
+            <form id="studyForm">
+                <div class="form-group">
+                    <label for="materia">Nome da Matéria:</label>
+                    <input type="text" id="materia" required placeholder="Ex: Direito Constitucional">
+                </div>
+                <div class="form-group">
+                    <label for="assunto">Nome do Assunto:</label>
+                    <input type="text" id="assunto" required placeholder="Ex: Princípios Fundamentais">
+                </div>
+                <div class="form-group">
+                    <label for="dataInicial">Data do Estudo Inicial:</label>
+                    <input type="date" id="dataInicial" required>
+                </div>
+                <button type="button" onclick="adicionarEstudo()">Adicionar Estudo</button>
+            </form>
+        </section>
+
+        <section class="study-list">
+            <h2>Estudos Cadastrados</h2>
+            <div id="studiesContainer">
+                <p>Nenhum estudo cadastrado. Adicione um novo estudo!</p>
+            </div>
+        </section>
+
+        <section class="revision-list">
+            <div class="revision-header">
+                <h2>Próximas Revisões</h2>
+                <div class="header-controls">
+                    <div class="filter-container">
+                        <label for="materiaFilter">Filtrar por matéria:</label>
+                        <select id="materiaFilter" onchange="aplicarFiltro()">
+                            <option value="">Todas as matérias</option>
+                        </select>
+                    </div>
+                    <button class="print-button" onclick="imprimirRevisoes()">🖨️ Imprimir Lista</button>
+                </div>
+            </div>
+            <div class="print-info">
+                <p>Lista de Revisões Espaçadas - Impresso em: <span id="printDate"></span></p>
+            </div>
+            <div id="revisionsContainer">
+                <p>Nenhuma revisão agendada. Adicione um novo estudo!</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Dados globais
+        let estudos = [];
+        let materiaFiltroAtual = '';
+        let estudoEditandoId = null;
+
+        // Carregar dados do localStorage
+        function carregarDados() {
+            const dados = localStorage.getItem('estudos-revisao');
+            if (dados) {
+                estudos = JSON.parse(dados);
+            }
+        }
+
+        // Salvar dados no localStorage
+        function salvarDados() {
+            localStorage.setItem('estudos-revisao', JSON.stringify(estudos));
+        }
+
+        // Renderizar lista de estudos
+        function renderizarEstudos() {
+            const container = document.getElementById('studiesContainer');
+            
+            if (estudos.length === 0) {
+                container.innerHTML = '<p>Nenhum estudo cadastrado. Adicione um novo estudo!</p>';
+                return;
+            }
+
+            let html = '';
+            estudos.forEach(estudo => {
+                const dataFormatada = new Date(estudo.dataInicial).toLocaleDateString('pt-BR');
+                const isEditing = estudoEditandoId === estudo.id;
+                
+                html += `
+                    <div class="study-item ${isEditing ? 'edit-mode' : ''}" id="study-${estudo.id}">
+                        <div class="study-header">
+                            <div class="study-info">
+                                <div class="study-title">${estudo.materia} - ${estudo.assunto}</div>
+                                <div class="study-details">Data inicial: ${dataFormatada}</div>
+                            </div>
+                            ${!isEditing ? `
+                                <div class="study-actions">
+                                    <button class="edit-button" onclick="iniciarEdicao(${estudo.id})">✏️ Editar</button>
+                                    <button class="delete-button" onclick="excluirEstudo(${estudo.id})">🗑️ Excluir</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                        ${isEditing ? `
+                            <div class="edit-form">
+                                <div class="form-group">
+                                    <label>Matéria:</label>
+                                    <input type="text" id="editMateria" value="${estudo.materia}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Assunto:</label>
+                                    <input type="text" id="editAssunto" value="${estudo.assunto}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Data Inicial:</label>
+                                    <input type="date" id="editDataInicial" value="${estudo.dataInicial}" required>
+                                </div>
+                                <div class="edit-actions">
+                                    <button class="save-button" onclick="salvarEdicao(${estudo.id})">💾 Salvar</button>
+                                    <button class="cancel-button" onclick="cancelarEdicao()">❌ Cancelar</button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Iniciar edição de um estudo
+        function iniciarEdicao(estudoId) {
+            estudoEditandoId = estudoId;
+            renderizarEstudos();
+        }
+
+        // Cancelar edição
+        function cancelarEdicao() {
+            estudoEditandoId = null;
+            renderizarEstudos();
+        }
+
+        // Salvar edição de um estudo
+        function salvarEdicao(estudoId) {
+            const materia = document.getElementById('editMateria').value.trim();
+            const assunto = document.getElementById('editAssunto').value.trim();
+            const dataInicial = document.getElementById('editDataInicial').value;
+
+            if (!materia || !assunto || !dataInicial) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            const estudo = estudos.find(e => e.id === estudoId);
+            if (estudo) {
+                estudo.materia = materia;
+                estudo.assunto = assunto;
+                estudo.dataInicial = dataInicial;
+                estudo.revisoes = calcularRevisoes(dataInicial);
+                
+                salvarDados();
+                estudoEditandoId = null;
+                
+                // Atualizar todas as visualizações
+                renderizarEstudos();
+                atualizarFiltroMaterias();
+                renderizarRevisoes();
+                
+                alert('Estudo atualizado com sucesso!');
+            }
+        }
+
+        // Excluir um estudo
+        function excluirEstudo(estudoId) {
+            const estudo = estudos.find(e => e.id === estudoId);
+            if (estudo && confirm(`Tem certeza que deseja excluir o estudo "${estudo.materia} - ${estudo.assunto}"?\n\nTodas as revisões relacionadas também serão removidas.`)) {
+                estudos = estudos.filter(e => e.id !== estudoId);
+                salvarDados();
+                
+                // Atualizar todas as visualizações
+                renderizarEstudos();
+                atualizarFiltroMaterias();
+                renderizarRevisoes();
+                
+                alert('Estudo excluído com sucesso!');
+            }
+        }
+
+        // Atualizar dropdown de filtro por matéria
+        function atualizarFiltroMaterias() {
+            const select = document.getElementById('materiaFilter');
+            const materiasUnicas = [...new Set(estudos.map(estudo => estudo.materia))].sort();
+            
+            // Limpar opções existentes (exceto "Todas as matérias")
+            select.innerHTML = '<option value="">Todas as matérias</option>';
+            
+            // Adicionar opções para cada matéria
+            materiasUnicas.forEach(materia => {
+                const option = document.createElement('option');
+                option.value = materia;
+                option.textContent = materia;
+                if (materia === materiaFiltroAtual) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+        }
+
+        // Aplicar filtro por matéria
+        function aplicarFiltro() {
+            const select = document.getElementById('materiaFilter');
+            materiaFiltroAtual = select.value;
+            renderizarRevisoes();
+        }
+
+        // Calcular datas de revisão
+        function calcularRevisoes(dataInicial) {
+            const data = new Date(dataInicial);
+            const intervalos = [1, 3, 7, 15, 30];
+            const revisoes = [];
+
+            intervalos.forEach((dias, index) => {
+                const dataRevisao = new Date(data);
+                dataRevisao.setDate(data.getDate() + dias);
+                revisoes.push({
+                    numero: index + 1,
+                    data: dataRevisao.toISOString().split('T')[0],
+                    concluida: false
+                });
+            });
+
+            return revisoes;
+        }
+
+        // Adicionar novo estudo
+        function adicionarEstudo() {
+            const materia = document.getElementById('materia').value.trim();
+            const assunto = document.getElementById('assunto').value.trim();
+            const dataInicial = document.getElementById('dataInicial').value;
+
+            if (!materia || !assunto || !dataInicial) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            const novoEstudo = {
+                id: Date.now(),
+                materia: materia,
+                assunto: assunto,
+                dataInicial: dataInicial,
+                revisoes: calcularRevisoes(dataInicial)
+            };
+
+            estudos.push(novoEstudo);
+            salvarDados();
+
+            // Limpar formulário
+            document.getElementById('materia').value = '';
+            document.getElementById('assunto').value = '';
+            document.getElementById('dataInicial').value = '';
+
+            // Mostrar mensagem de sucesso
+            const successMsg = document.getElementById('successMessage');
+            successMsg.style.display = 'block';
+            setTimeout(() => {
+                successMsg.style.display = 'none';
+            }, 3000);
+
+            // Atualizar filtro e renderizar revisões
+            renderizarEstudos();
+            atualizarFiltroMaterias();
+            renderizarRevisoes();
+        }
+
+        // Marcar revisão como concluída
+        function marcarRevisao(estudoId, numeroRevisao, concluida) {
+            const estudo = estudos.find(e => e.id == estudoId);
+            if (estudo) {
+                const revisao = estudo.revisoes.find(r => r.numero == numeroRevisao);
+                if (revisao) {
+                    revisao.concluida = concluida;
+                    salvarDados();
+                    renderizarRevisoes();
+                }
+            }
+        }
+
+        // Função para imprimir revisões
+        function imprimirRevisoes() {
+            try {
+                // Atualizar data de impressão
+                const agora = new Date();
+                const dataFormatada = agora.toLocaleDateString('pt-BR') + ' às ' + agora.toLocaleTimeString('pt-BR');
+                document.getElementById('printDate').textContent = dataFormatada;
+                
+                // Verificar se há revisões para imprimir
+                const container = document.getElementById('revisionsContainer');
+                if (container.innerHTML.includes('Nenhuma revisão agendada')) {
+                    alert('Não há revisões para imprimir. Adicione um estudo primeiro!');
+                    return;
+                }
+                
+                // Acionar impressão
+                if (window.print) {
+                    window.print();
+                } else {
+                    alert('Função de impressão não disponível neste navegador. Use Ctrl+P para imprimir.');
+                }
+            } catch (error) {
+                console.error('Erro ao imprimir:', error);
+                alert('Erro ao imprimir. Use Ctrl+P para imprimir manualmente.');
+            }
+        }
+
+        // Renderizar lista de revisões
+        function renderizarRevisoes() {
+            const container = document.getElementById('revisionsContainer');
+            const hoje = new Date();
+            hoje.setHours(0, 0, 0, 0);
+
+            // Coletar todas as revisões
+            const todasRevisoes = [];
+            estudos.forEach(estudo => {
+                // Aplicar filtro por matéria se selecionado
+                if (materiaFiltroAtual && estudo.materia !== materiaFiltroAtual) {
+                    return; // Pular este estudo se não corresponder ao filtro
+                }
+                
+                estudo.revisoes.forEach(revisao => {
+                    const dataRevisao = new Date(revisao.data);
+                    if (dataRevisao >= hoje || revisao.concluida) {
+                        todasRevisoes.push({
+                            ...revisao,
+                            materia: estudo.materia,
+                            assunto: estudo.assunto,
+                            estudoId: estudo.id
+                        });
+                    }
+                });
+            });
+
+            // Ordenar por data
+            todasRevisoes.sort((a, b) => new Date(a.data) - new Date(b.data));
+
+            if (todasRevisoes.length === 0) {
+                const mensagem = materiaFiltroAtual 
+                    ? `Nenhuma revisão encontrada para a matéria "${materiaFiltroAtual}".`
+                    : 'Nenhuma revisão agendada. Adicione um novo estudo!';
+                container.innerHTML = `<p>${mensagem}</p>`;
+                return;
+            }
+
+            // Agrupar por data
+            const revisoesPorData = {};
+            todasRevisoes.forEach(revisao => {
+                const data = revisao.data;
+                if (!revisoesPorData[data]) {
+                    revisoesPorData[data] = [];
+                }
+                revisoesPorData[data].push(revisao);
+            });
+
+            // Renderizar
+            let html = '';
+            Object.keys(revisoesPorData).forEach(data => {
+                const dataFormatada = new Date(data + 'T00:00:00').toLocaleDateString('pt-BR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+
+                html += `<h3>${dataFormatada}</h3>`;
+
+                revisoesPorData[data].forEach(revisao => {
+                    const classeCompleta = revisao.concluida ? 'completed' : '';
+                    const checked = revisao.concluida ? 'checked' : '';
+
+                    html += `
+                        <div class="revision-item ${classeCompleta}">
+                            <div class="revision-info">
+                                <h3>${revisao.materia} - ${revisao.assunto}</h3>
+                                <p>${revisao.numero}ª Revisão - ${new Date(revisao.data + 'T00:00:00').toLocaleDateString('pt-BR')}</p>
+                            </div>
+                            <div class="revision-actions">
+                                <input type="checkbox" ${checked} 
+                                       onchange="marcarRevisao(${revisao.estudoId}, ${revisao.numero}, this.checked)">
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+
+            container.innerHTML = html;
+        }
+
+        // Inicializar aplicação
+        window.onload = function() {
+            carregarDados();
+            renderizarEstudos();
+            atualizarFiltroMaterias();
+            renderizarRevisoes();
+            
+            // Definir data padrão como hoje
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('dataInicial').value = hoje;
+        };
+    </script>
+</body>
+</html>
