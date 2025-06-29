@@ -889,7 +889,7 @@
                     const dataRevisao = new Date(revisao.data);
                     console.log('HOJE: ' + hoje.getTime());
                     console.log('DATA REVISÃO' + dataRevisao.getTime());
-                    if (dataRevisao > hoje || revisao.concluida) {
+                    if (dataRevisao.getTime() > hoje.getTime() || revisao.concluida) {
                         todasRevisoes.push({
                             ...revisao,
                             materia: estudo.materia,
