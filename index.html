@@ -886,18 +886,12 @@
                 }
                 
                 estudo.revisoes.forEach(revisao => {
-                    const dataRevisao = new Date(revisao.data);
-                    dataRevisao.setHours(0, 0, 0, 0);
-                    console.log('HOJE: ' + hoje.toLocaleDateString());
-                    console.log('DATA REVISÃO: ' + dataRevisao.toLocaleDateString());
-                    if (dataRevisao.getTime() > hoje.getTime() || revisao.concluida) {
-                        todasRevisoes.push({
-                            ...revisao,
-                            materia: estudo.materia,
-                            assunto: estudo.assunto,
-                            estudoId: estudo.id
-                        });
-                    }
+                    todasRevisoes.push({
+                        ...revisao,
+                        materia: estudo.materia,
+                        assunto: estudo.assunto,
+                        estudoId: estudo.id
+                    });
                 });
             });
 
