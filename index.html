@@ -875,7 +875,7 @@
         function renderizarRevisoes() {
             const container = document.getElementById('revisionsContainer');
             const hoje = new Date();
-            hoje.setHours(0, 0, 0, 0);
+            // hoje.setHours(0, 0, 0, 0);
 
             // Coletar todas as revisões
             const todasRevisoes = [];
@@ -888,8 +888,8 @@
                 estudo.revisoes.forEach(revisao => {
                     const dataRevisao = new Date(revisao.data);
                     dataRevisao.setHours(0, 0, 0, 0);
-                    console.log('HOJE: ' + hoje.getTime());
-                    console.log('DATA REVISÃO: ' + dataRevisao.getTime());
+                    console.log('HOJE: ' + hoje.toLocaleDateString());
+                    console.log('DATA REVISÃO: ' + dataRevisao.toLocaleDateString());
                     if (dataRevisao.getTime() > hoje.getTime() || revisao.concluida) {
                         todasRevisoes.push({
                             ...revisao,
