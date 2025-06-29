@@ -887,7 +887,7 @@
                 
                 estudo.revisoes.forEach(revisao => {
                     const dataRevisao = new Date(revisao.data);
-                    if (dataRevisao >= hoje || revisao.concluida) {
+                    if (dataRevisao > hoje || revisao.concluida) {
                         todasRevisoes.push({
                             ...revisao,
                             materia: estudo.materia,
