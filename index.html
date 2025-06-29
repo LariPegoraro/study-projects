@@ -887,8 +887,8 @@
                 
                 estudo.revisoes.forEach(revisao => {
                     const dataRevisao = new Date(revisao.data);
-                    console.log(hoje);
-                    console.log(dataRevisao);
+                    console.log('HOJE: ' + hoje.getTime());
+                    console.log('DATA REVISÃO' + dataRevisao.getTime());
                     if (dataRevisao > hoje || revisao.concluida) {
                         todasRevisoes.push({
                             ...revisao,
